@@ -1,6 +1,6 @@
 var util = require('util');
 var journey = require('journey');
-
+var tasty = require('tasty');
 
 /*
  * Create request router and routing table
@@ -9,38 +9,15 @@ var router = new(journey.Router);
 
 router.map(function () {
 
-	// Provide a link to the documentation
-    this.get('/').bind(function (req, res) {
-        res.send(200, {}, { documentation: "somewhere.com" });
-    });
+    this.get('/').bind(tasty.getDocUrl);
     
-    
-    // Get all bookmarks
-	this.get('/bookmarks').bind(function (req, res, params) {
-        res.send(501, {}, { placeholder: "Get all bookmarks", fields: params.fields });
-    });
-    
-    // Create new bookmark
-    this.post('/bookmarks').bind(function (req, res, data) {
-        res.send(501, {}, { placeholder: "Create new bookmark", input: data });
-    });
-    
-    // Get specified bookmark
-    this.get(/^bookmarks\/(\d+)$/).bind(function (req, res, id) {
-        res.send(501, {}, { placeholder: 'Get bookmark '+id });
-    });
-    
-    // Update specified bookmark
-    this.put(/^bookmarks\/(\d+)$/).bind(function (req, res, id, data) {
-        res.send(501, {}, { placeholder: 'Update bookmark '+id, input: data });
-    });
-    
-    // Delete specified bookmark
-    this.del(/^bookmarks\/(\d+)$/).bind(function (req, res, id) {
-        res.send(501, {}, { placeholder: 'Delete bookmark '+id });
-    });
+	this.get('/bookmarks').bind(tasty.getAllBookmarks);
+	
+    this.post('/bookmarks').bind(tasty.createBookmark);
+    this.get(/^bookmarks\/(\d+)$/).bind(tasty.getBookmark);
+    this.put(/^bookmarks\/(\d+)$/).bind(tasty.updateBookmark);
+    this.del(/^bookmarks\/(\d+)$/).bind(tasty.deleteBookmark);
         
-    
 });
 
 
