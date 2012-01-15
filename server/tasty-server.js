@@ -2,6 +2,7 @@ var util = require('util');
 var journey = require('journey');
 var tasty = require('tasty');
 
+
 /*
  * Create request router and routing table
  */
@@ -14,9 +15,9 @@ router.map(function () {
 	this.get('/bookmarks').bind(tasty.getAllBookmarks);
 	
     this.post('/bookmarks').bind(tasty.createBookmark);
-    this.get(/^bookmarks\/(\d+)$/).bind(tasty.getBookmark);
-    this.put(/^bookmarks\/(\d+)$/).bind(tasty.updateBookmark);
-    this.del(/^bookmarks\/(\d+)$/).bind(tasty.deleteBookmark);
+    this.get(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(tasty.getBookmark);
+    this.put(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(tasty.updateBookmark);
+    this.del(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(tasty.deleteBookmark);
         
 });
 
