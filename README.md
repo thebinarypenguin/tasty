@@ -6,7 +6,7 @@ Tasty is a simple bookmarking web service in the spirit of del.icio.us. Actually
 
 The following command will create a database named **tasty**, a collection named **bookmarks**, and fill that collection with some initial data.
 
-`mongoimport -d tasty -c bookmarks initial-data.json`
+`mongoimport -d tasty -c bookmarks tools/initial-data.json`
 
 # Service Description
 
@@ -52,6 +52,7 @@ Create new bookmark
 
 ```
 curl \
+  -i \
   -X POST \
   -d "name=Example%20Site" \
   -d "url=http%3A%2F%2Fexample-site.com" \
@@ -62,13 +63,14 @@ curl \
 Retrieve specified bookmark
 
 ```
-curl -X GET 127.0.0.1:8080/bookmarks/BOOKMARK_ID
+curl -i -X GET 127.0.0.1:8080/bookmarks/BOOKMARK_ID
 ```
 
 Update specified bookmark
 
 ```
 curl \
+  -i \
   -X PUT \
   -d "name=Example%20Site" \
   -d "url=http%3A%2F%2Fexample-site.com" \
@@ -79,7 +81,7 @@ curl \
 Delete specified bookmark
 
 ```
-curl -X DELETE 127.0.0.1:8080/bookmarks/BOOKMARK_ID
+curl -i -X DELETE 127.0.0.1:8080/bookmarks/BOOKMARK_ID
 ```
 
 # License
