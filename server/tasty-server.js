@@ -1,4 +1,3 @@
-var util = require('util');
 var journey = require('journey');
 var tasty = require('tasty');
 
@@ -43,4 +42,4 @@ require('http').createServer(function (request, response) {
 }).listen(8080);
 
 
-util.puts('tasty listening at http://127.0.0.1:8080');
+console.log('tasty listening at http://127.0.0.1:8080');
