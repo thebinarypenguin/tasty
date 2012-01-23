@@ -10,7 +10,7 @@ exports.getDocUrl = function (req, res) {
  * Get all bookmarks
  */
 exports.getAllBookmarks = function (req, res, params) {
-	res.send(501, {} {message: "I'm just a stub."});
+	res.send(501, {}, {message: "I'm just a stub."});
 };
 
 
@@ -18,7 +18,7 @@ exports.getAllBookmarks = function (req, res, params) {
  * Create new bookmark
  */
 exports.createBookmark = function (req, res, body) {
-	res.send(501, {} {message: "I'm just a stub."});
+	res.send(501, {}, {message: "I'm just a stub."});
 };
 
 
@@ -26,7 +26,7 @@ exports.createBookmark = function (req, res, body) {
  * Get specified bookmark
  */
 exports.getBookmark = function (req, res, id, params) {
-	res.send(501, {} {message: "I'm just a stub."});
+	res.send(501, {}, {message: "I'm just a stub."});
 };
 
 
@@ -34,7 +34,7 @@ exports.getBookmark = function (req, res, id, params) {
  * Update specified bookmark
  */
 exports.updateBookmark = function (req, res, id, body) {
-	res.send(501, {} {message: "I'm just a stub."});
+	res.send(501, {}, {message: "I'm just a stub."});
 };
 
 
@@ -42,5 +42,5 @@ exports.updateBookmark = function (req, res, id, body) {
  * Delete specified bookmark
  */
 exports.deleteBookmark = function (req, res, id) {
-	res.send(501, {} {message: "I'm just a stub."});
+	res.send(501, {}, {message: "I'm just a stub."});
 };
