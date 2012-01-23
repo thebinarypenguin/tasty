@@ -1,5 +1,5 @@
 var journey = require('journey');
-var tasty = require('tasty');
+var api = require('./controllers/api');
 
 
 /*
@@ -9,14 +9,14 @@ var router = new(journey.Router);
 
 router.map(function () {
 
-    this.get('/').bind(tasty.getDocUrl);
+    this.get('/').bind(api.getDocUrl);
     
-	this.get('/bookmarks').bind(tasty.getAllBookmarks);
+	this.get('/bookmarks').bind(api.getAllBookmarks);
 	
-    this.post('/bookmarks').bind(tasty.createBookmark);
-    this.get(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(tasty.getBookmark);
-    this.put(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(tasty.updateBookmark);
-    this.del(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(tasty.deleteBookmark);
+    this.post('/bookmarks').bind(api.createBookmark);
+    this.get(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(api.getBookmark);
+    this.put(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(api.updateBookmark);
+    this.del(/^bookmarks\/([a-zA-Z0-9]+)$/).bind(api.deleteBookmark);
         
 });
 
