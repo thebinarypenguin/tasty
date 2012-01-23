@@ -90,7 +90,7 @@ var parseBody = function (body) {
 /**
  * Get all bookmarks
  */
-exports.getAllBookmarks = function (params) {
+exports.getAll = function (params) {
 	
 	// Validate filter fields
 	var fields = parseFields(params.fields);
@@ -120,7 +120,7 @@ exports.getAllBookmarks = function (params) {
 /**
  * Create new bookmark
  */
-exports.createBookmark = function (body) {
+exports.create = function (body) {
 
 	// Validate request body
 	var data = parseBody(body);
@@ -149,7 +149,7 @@ exports.createBookmark = function (body) {
 /**
  * Get specified bookmark
  */
-exports.getBookmark = function (id, params) {
+exports.get = function (id, params) {
 
 	// Validate resource id
 	var query = parseId(id);
@@ -185,7 +185,7 @@ exports.getBookmark = function (id, params) {
 /**
  * Update specified bookmark
  */
-exports.updateBookmark = function (id, body) {
+exports.update = function (id, body) {
 
 	// Validate resource id
 	var query = parseId(id);
@@ -220,7 +220,7 @@ exports.updateBookmark = function (id, body) {
 /**
  * Delete specified bookmark
  */
-exports.deleteBookmark = function (id) {
+exports.remove = function (id) {
 
 	// Validate resource id
 	var query = parseId(id);
