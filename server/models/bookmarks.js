@@ -90,7 +90,7 @@ var parseBody = function (body) {
 /**
  * Get all bookmarks
  */
-exports.getAll = function (params) {
+exports.getAll = function (params, callback) {
 	
 	// Validate filter fields
 	var fields = parseFields(params.fields);
@@ -105,7 +105,7 @@ exports.getAll = function (params) {
 			collection.find({}, fields, function (err, cursor) {
 			
 				cursor.toArray(function (err, docs) {
-					return docs;
+					callback(err, docs);
 				});
 			
 			});
@@ -120,7 +120,7 @@ exports.getAll = function (params) {
 /**
  * Create new bookmark
  */
-exports.create = function (body) {
+exports.create = function (body, callback) {
 
 	// Validate request body
 	var data = parseBody(body);
@@ -136,7 +136,7 @@ exports.create = function (body) {
 
 			// Create document			
 			collection.insert(data, {safe: true}, function (err, docs) {
-    			return docs[0];
+    			callback(err, docs[0]);
 			});
 
 		});	
@@ -149,7 +149,7 @@ exports.create = function (body) {
 /**
  * Get specified bookmark
  */
-exports.get = function (id, params) {
+exports.get = function (id, params, callback) {
 
 	// Validate resource id
 	var query = parseId(id);
@@ -170,7 +170,7 @@ exports.get = function (id, params) {
 			collection.find(query, fields, function(err, cursor) {
 				
 				cursor.toArray(function (err, docs) {
-					return docs;
+					callback(err, docs);
 				});
 				
 			});
@@ -185,7 +185,7 @@ exports.get = function (id, params) {
 /**
  * Update specified bookmark
  */
-exports.update = function (id, body) {
+exports.update = function (id, body, callback) {
 
 	// Validate resource id
 	var query = parseId(id);
@@ -207,7 +207,7 @@ exports.update = function (id, body) {
 
 			// Update document			
 			collection.update(query, data, {safe: true}, function(err, count) {
-    			return count;
+    			callback(err, count);
 			});
 
 		});	
@@ -220,7 +220,7 @@ exports.update = function (id, body) {
 /**
  * Delete specified bookmark
  */
-exports.remove = function (id) {
+exports.remove = function (id, callback) {
 
 	// Validate resource id
 	var query = parseId(id);
@@ -236,7 +236,7 @@ exports.remove = function (id) {
 			
 			// Delete document			
 			collection.remove(query, {safe: true}, function(err, count) {
-				return count;
+				callback(err, count);
 			});
 
 		});	
