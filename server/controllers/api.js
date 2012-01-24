@@ -1,3 +1,6 @@
+var bookmarks = require('../models/bookmarks.js');
+
+
 /**
  * Get documentation URL
  */
@@ -10,7 +13,11 @@ exports.getDocUrl = function (req, res) {
  * Get all bookmarks
  */
 exports.getAllBookmarks = function (req, res, params) {
-	res.send(501, {}, {message: "I'm just a stub."});
+
+	bookmarks.getAll(params, function (err, docs) {
+		res.send(200, {}, JSON.stringify(docs));
+	});
+	
 };
 
 
@@ -18,7 +25,11 @@ exports.getAllBookmarks = function (req, res, params) {
  * Create new bookmark
  */
 exports.createBookmark = function (req, res, body) {
-	res.send(501, {}, {message: "I'm just a stub."});
+
+	bookmarks.create(body, function (err, doc) {
+		res.send(200, {}, JSON.stringify(doc));
+	});
+	
 };
 
 
@@ -26,7 +37,11 @@ exports.createBookmark = function (req, res, body) {
  * Get specified bookmark
  */
 exports.getBookmark = function (req, res, id, params) {
-	res.send(501, {}, {message: "I'm just a stub."});
+
+	var doc = bookmarks.get(id, params, function (err, doc) {
+		res.send(200, {}, JSON.stringify(doc));
+	});
+
 };
 
 
@@ -34,7 +49,11 @@ exports.getBookmark = function (req, res, id, params) {
  * Update specified bookmark
  */
 exports.updateBookmark = function (req, res, id, body) {
-	res.send(501, {}, {message: "I'm just a stub."});
+
+	var count = bookmarks.update(id, body, function (err, count) {
+		res.send(200, {}, {});	
+	});
+
 };
 
 
@@ -42,5 +61,9 @@ exports.updateBookmark = function (req, res, id, body) {
  * Delete specified bookmark
  */
 exports.deleteBookmark = function (req, res, id) {
-	res.send(501, {}, {message: "I'm just a stub."});
+	
+	bookmarks.remove(id, function (err, count) {
+		res.send(200, {}, {});	
+	});
+	
 };
