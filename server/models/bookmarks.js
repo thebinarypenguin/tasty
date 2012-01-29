@@ -6,7 +6,9 @@ var config = {
 	port: mongodb.Connection.DEFAULT_PORT,
 	database: "tasty",
 	serverOptions: {},
-	databaseOptions: {}
+	databaseOptions: {
+		strict: true
+	}
 };
 
 
@@ -15,7 +17,6 @@ var mongoConnection = new mongodb.Db(config.database, mongoServer, config.databa
 
 // Get the objectID type - this is the default type of the "_id" field
 var ObjectID = require('mongodb').ObjectID;
-
 
 
 /**
@@ -84,9 +85,6 @@ var parseBody = function (body) {
 };
 
 
-
-
-
 /**
  * Get all bookmarks
  */
@@ -97,15 +95,25 @@ exports.getAll = function (params, callback) {
 	
 	// Open connection
 	mongoConnection.open(function (err, db) {
+
+		if (err) { callback(err, null); return; }
 		
 		// Get collection
 		db.collection('bookmarks', function(err, collection) {
 
+			if (err) { callback(err, null); return; }
+
 			// Get documents
 			collection.find({}, fields, function (err, cursor) {
+
+				if (err) { callback(err, null); return; }
 			
 				cursor.toArray(function (err, docs) {
-					callback(err, docs);
+
+					if (err) { callback(err, null); return; }
+
+					callback(null, docs);
+
 				});
 			
 			});
@@ -125,18 +133,26 @@ exports.create = function (body, callback) {
 	// Validate request body
 	var data = parseBody(body);
 	if (data === null) {
-		return false;
+		callback( new Error('Invalid message body'), null );
 	}
 	
 	// Open connection
 	mongoConnection.open(function (err, db) {
 	
+		if (err) { callback(err, null); return; }
+	
 		// Get collection
 		db.collection('bookmarks', function (err, collection) {			
 
+			if (err) { callback(err, null); return; }
+
 			// Create document			
 			collection.insert(data, {safe: true}, function (err, docs) {
-    			callback(err, docs[0]);
+
+				if (err) { callback(err, null); return; }
+
+    			callback(null, docs[0]);
+    			
 			});
 
 		});	
@@ -154,7 +170,7 @@ exports.get = function (id, params, callback) {
 	// Validate resource id
 	var query = parseId(id);
 	if (query === null) {
-		return false;
+		callback( new Error('Invalid resource id'), null );
 	}
 
 	// Validate filter fields
@@ -163,14 +179,24 @@ exports.get = function (id, params, callback) {
 	// Open connection
 	mongoConnection.open(function (err, db) {
 	
+		if (err) { callback(err, null); return; }
+	
 		// Get collection
 		db.collection('bookmarks', function(err, collection) {
 
+			if (err) { callback(err, null); return; }
+
 			// Get document			
 			collection.find(query, fields, function(err, cursor) {
+
+				if (err) { callback(err, null); return; }
 				
 				cursor.toArray(function (err, docs) {
-					callback(err, docs);
+				
+					if (err) { callback(err, null); return; }
+				
+					callback(null, docs);
+					
 				});
 				
 			});
@@ -190,24 +216,32 @@ exports.update = function (id, body, callback) {
 	// Validate resource id
 	var query = parseId(id);
 	if (query === null) {
-		return false;
+		callback( new Error('Invalid resource id'), null );
 	}
 
 	// Validate request body	
 	var data = parseBody(body);
 	if (data === null) {
-		return false;
+		callback( new Error('Invalid message body'), null );
 	}
 
 	// Open connection
 	mongoConnection.open(function (err, db) {
 	
+		if (err) { callback(err, null); return; }
+	
 		// Get collection
 		db.collection('bookmarks', function(err, collection) {			
 
+			if (err) { callback(err, null); return; }
+
 			// Update document			
 			collection.update(query, data, {safe: true}, function(err, count) {
-    			callback(err, count);
+
+				if (err) { callback(err, null); return; }
+
+    			callback(null, count);
+    			
 			});
 
 		});	
@@ -225,18 +259,26 @@ exports.remove = function (id, callback) {
 	// Validate resource id
 	var query = parseId(id);
 	if (query === null) {
-		return false;
+		callback( new Error('Invalid resource id'), null );
 	}
 
 	// Open connection
 	mongoConnection.open(function (err, db) {
 	
+		if (err) { callback(err, null); return; }
+	
 		// Get collection
 		db.collection('bookmarks', function(err, collection) {
+	
+			if (err) { callback(err, null); return; }
 			
 			// Delete document			
 			collection.remove(query, {safe: true}, function(err, count) {
-				callback(err, count);
+				
+				if (err) { callback(err, null); return; }
+				
+				callback(null, count);
+				
 			});
 
 		});	

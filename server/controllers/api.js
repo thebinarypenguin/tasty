@@ -15,7 +15,13 @@ exports.getDocUrl = function (req, res) {
 exports.getAllBookmarks = function (req, res, params) {
 
 	bookmarks.getAll(params, function (err, docs) {
-		res.send(200, {}, JSON.stringify(docs));
+
+		if (err) {
+			res.send(500, {}, {error: err.message});
+		} else {
+			res.send(200, {}, JSON.stringify(docs));
+		}
+		
 	});
 	
 };
@@ -27,7 +33,13 @@ exports.getAllBookmarks = function (req, res, params) {
 exports.createBookmark = function (req, res, body) {
 
 	bookmarks.create(body, function (err, doc) {
-		res.send(200, {}, JSON.stringify(doc));
+
+		if (err) {
+			res.send(500, {}, {error: err.message});
+		} else {
+			res.send(200, {}, JSON.stringify(doc));
+		}
+
 	});
 	
 };
@@ -38,8 +50,14 @@ exports.createBookmark = function (req, res, body) {
  */
 exports.getBookmark = function (req, res, id, params) {
 
-	var doc = bookmarks.get(id, params, function (err, doc) {
-		res.send(200, {}, JSON.stringify(doc));
+	bookmarks.get(id, params, function (err, doc) {
+	
+		if (err) {
+			res.send(500, {}, {error: err.message});
+		} else {
+			res.send(200, {}, JSON.stringify(doc));
+		}	
+
 	});
 
 };
@@ -50,8 +68,14 @@ exports.getBookmark = function (req, res, id, params) {
  */
 exports.updateBookmark = function (req, res, id, body) {
 
-	var count = bookmarks.update(id, body, function (err, count) {
-		res.send(200, {}, {});	
+	bookmarks.update(id, body, function (err, count) {
+
+		if (err) {
+			res.send(500, {}, {error: err.message});
+		} else {
+			res.send(200, {}, {count: count});
+		}
+	
 	});
 
 };
@@ -63,7 +87,13 @@ exports.updateBookmark = function (req, res, id, body) {
 exports.deleteBookmark = function (req, res, id) {
 	
 	bookmarks.remove(id, function (err, count) {
-		res.send(200, {}, {});	
+
+		if (err) {
+			res.send(500, {}, {error: err.message});
+		} else {
+			res.send(200, {}, {count: count});
+		}
+	
 	});
 	
 };
