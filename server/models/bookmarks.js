@@ -34,9 +34,12 @@ var inArray = function (needle, haystack) {
  * Parse resource id and return as object
  */
 var parseId = function (id) {
-	
+
+	// Convert to string
+	id += '';
+
 	// Check that id is 24-char hex string
-	if (/[a-f0-9]{24}/i.test()) {
+	if (/[a-f0-9]{24}/i.test(id)) {
 		return {"_id": new ObjectID(id)};
 	} else {
 		return null;
@@ -69,19 +72,32 @@ var parseFields = function (fields) {
 /**
  * Parse body and return as object
  */
-var parseBody = function (body) {	
+var parseBody = function (body, strict) {	
 
-	// name is required
-	if (body.name === undefined) {
-		return null;
+	var obj = {};
+
+	// Grab name
+	if (typeof body.name === 'string') {
+		obj.name = body.name;
 	}
 	
-	// url is required
-	if (body.url === undefined) {
-		return null;
-	}	
+	// Grab url
+	if (typeof body.url === 'string') {
+		obj.url = body.url;
+	}
 	
-	return body;
+	// Grab description
+	if (typeof body.description === 'string') {
+		obj.description = body.description;
+	}
+	
+	// Minimum requirements for creation of new bookmark
+	if (strict) {
+		if (typeof obj.name !== 'string') { return null; }
+		if (typeof obj.url !== 'string') { return null; }
+	}
+	
+	return obj;
 };
 
 
@@ -98,20 +114,22 @@ exports.getAll = function (params, callback) {
 
 		if (err) { callback(err, null); return; }
 		
-		// Get collection
+		// Get bookmarks collection
 		db.collection('bookmarks', function(err, collection) {
 
 			if (err) { callback(err, null); return; }
 
-			// Get documents
+			// Get all bookmarks
 			collection.find({}, fields, function (err, cursor) {
 
 				if (err) { callback(err, null); return; }
 			
+				// Convert resultset to an array
 				cursor.toArray(function (err, docs) {
 
 					if (err) { callback(err, null); return; }
 
+					// Execute callback with array of bookmarks
 					callback(null, docs);
 
 				});
@@ -131,9 +149,9 @@ exports.getAll = function (params, callback) {
 exports.create = function (body, callback) {
 
 	// Validate request body
-	var data = parseBody(body);
+	var data = parseBody(body, true);
 	if (data === null) {
-		callback( new Error('Invalid message body'), null );
+		callback( new Error('Invalid message body'), null ); return;
 	}
 	
 	// Open connection
@@ -141,16 +159,17 @@ exports.create = function (body, callback) {
 	
 		if (err) { callback(err, null); return; }
 	
-		// Get collection
+		// Get bookmarks collection
 		db.collection('bookmarks', function (err, collection) {			
 
 			if (err) { callback(err, null); return; }
 
-			// Create document			
+			// Create bookmark			
 			collection.insert(data, {safe: true}, function (err, docs) {
 
 				if (err) { callback(err, null); return; }
 
+				// Execute callback with bookmark object
     			callback(null, docs[0]);
     			
 			});
@@ -170,7 +189,7 @@ exports.get = function (id, params, callback) {
 	// Validate resource id
 	var query = parseId(id);
 	if (query === null) {
-		callback( new Error('Invalid resource id'), null );
+		callback( new Error('Invalid resource id'), null ); return;
 	}
 
 	// Validate filter fields
@@ -181,21 +200,23 @@ exports.get = function (id, params, callback) {
 	
 		if (err) { callback(err, null); return; }
 	
-		// Get collection
+		// Get bookmarks collection
 		db.collection('bookmarks', function(err, collection) {
 
 			if (err) { callback(err, null); return; }
 
-			// Get document			
+			// Get bookmark			
 			collection.find(query, fields, function(err, cursor) {
 
 				if (err) { callback(err, null); return; }
-				
+
+				// Convert resultset to an array				
 				cursor.toArray(function (err, docs) {
 				
 					if (err) { callback(err, null); return; }
 				
-					callback(null, docs);
+					// Execute callback with bookmark object
+					callback(null, docs[0]);
 					
 				});
 				
@@ -216,31 +237,43 @@ exports.update = function (id, body, callback) {
 	// Validate resource id
 	var query = parseId(id);
 	if (query === null) {
-		callback( new Error('Invalid resource id'), null );
+		callback( new Error('Invalid resource id'), null ); return;
 	}
 
 	// Validate request body	
 	var data = parseBody(body);
-	if (data === null) {
-		callback( new Error('Invalid message body'), null );
-	}
 
 	// Open connection
 	mongoConnection.open(function (err, db) {
 	
 		if (err) { callback(err, null); return; }
 	
-		// Get collection
+		// Get bookmarks collection
 		db.collection('bookmarks', function(err, collection) {			
 
 			if (err) { callback(err, null); return; }
 
-			// Update document			
+			// Update bookmark			
 			collection.update(query, data, {safe: true}, function(err, count) {
 
 				if (err) { callback(err, null); return; }
 
-    			callback(null, count);
+				// Get bookmark			
+				collection.find(query, {}, function(err, cursor) {
+
+					if (err) { callback(err, null); return; }
+
+					// Convert resultset to an array				
+					cursor.toArray(function (err, docs) {
+				
+						if (err) { callback(err, null); return; }
+				
+						// Execute callback with bookmark object
+						callback(null, docs[0]);
+					
+					});
+				
+				});
     			
 			});
 
@@ -259,7 +292,7 @@ exports.remove = function (id, callback) {
 	// Validate resource id
 	var query = parseId(id);
 	if (query === null) {
-		callback( new Error('Invalid resource id'), null );
+		callback( new Error('Invalid resource id'), null ); return;
 	}
 
 	// Open connection
@@ -267,18 +300,19 @@ exports.remove = function (id, callback) {
 	
 		if (err) { callback(err, null); return; }
 	
-		// Get collection
+		// Get bookmarks collection
 		db.collection('bookmarks', function(err, collection) {
 	
 			if (err) { callback(err, null); return; }
 			
-			// Delete document			
+			// Delete bookmark			
 			collection.remove(query, {safe: true}, function(err, count) {
 				
 				if (err) { callback(err, null); return; }
 				
-				callback(null, count);
-				
+				// Execute callback with result
+    			callback(null, true);
+
 			});
 
 		});	
